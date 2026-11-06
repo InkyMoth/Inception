@@ -1,0 +1,11 @@
+# to allow both mysqld AND the MariaDB & MySQL servers to read this
+[mysqld]
+
+# basic stuff
+user				= mysql
+datadir				= /var/lib/mysql
+socket				= /run/mysqld/mysqld.sock
+port				= 3306
+
+# allows for global connections to containers
+bind-address		= *

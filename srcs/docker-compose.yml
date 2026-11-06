@@ -1,0 +1,77 @@
+# supposedly obsolete aside from following mandatory part
+# version: "3.7"
+
+
+services:
+
+  mariadb:
+    container_name: mariadb
+    build: requirements/mariadb/.
+    ports:
+      - "3306"
+    volumes:
+      - mariadb_vol:/var/lib/mysql
+    env_file:
+      - .env
+    networks:
+      - inception
+    restart: on-failure
+
+  nginx:
+    container_name: nginx
+    build: requirements/nginx/.
+    ports:
+      - "8443:8433"
+    depends_on:
+      - wordpress
+    volumes:
+      - wordpress_vol:/var/www/html
+    env_file:
+      - .env
+    networks:
+      - inception
+    restart: on-failure
+
+  wordpress:
+    container_name: wordpress
+    build: requirements/nginx/.
+    ports:
+      - "9000"
+    depends_on:
+      - mariadb
+    volumes:
+      - wordpress_vol:/var/www/html
+    env_file:
+      - .env
+    networks:
+      - inception
+    restart: on-failure
+
+
+volumes:
+
+  wordpress_vol:
+    name: wordpress_vol
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/$USER/data/wordpress
+
+  mariadb_vol:
+    name: mariadb_vol
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/$USER/data/mariadb
+
+
+networks:
+  inception:
+    name: inception
+    driver: bridge
+
+
+# secrets:
+  # for passwords, credentials, and API keys
