@@ -2,10 +2,11 @@
 [mysqld]
 
 # basic stuff
-user				= mysql
-datadir				= /var/lib/mysql
-socket				= /run/mysqld/mysqld.sock
-port				= 3306
+user			= root
+port			= 3306
+datadir			= /var/lib/mysql
+socket			= /run/mysqld/mysqld.sock
+skip-networking	= false
 
 # allows for global connections to containers
-bind-address		= *
+bind-address	= 0.0.0.0

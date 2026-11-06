@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sleep 10
+sleep 5
 if [ ! -f /var/www/wordpress/wp-config.php ];
 then
 	wp config create --allow-root \

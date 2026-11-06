@@ -1,16 +1,45 @@
 #!/bin/sh
 
 
-service mariadb start;
+if [ -d "/var/lib/mysql/${SQL_DATABASE}" ]; then
+	echo "[*] Database already exists, skipping creation"
+else
+	echo "[*] Database does not exist, ensuring MariaDB is setup"
 
-mariadb -e "CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;"
-mariadb -e "CREATE USER IF NOT EXISTS \`${SQL_USER}\`@'localhost' \
-	IDENTIFIED BY '${SQL_PASSWORD}';"
-mariadb -e "GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* \
-	TO \`${SQL_USER}\`@'%' IDENTIFIED BY '${SQL_PASSWORD}';"
-mariadb -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';"
-mariadb -e "FLUSH PRIVILEGES;"
+	echo "[*] Loading database in temporary init mode"
+	service mariadb start;
 
-mariadb-admin -u root -p$SQL_ROOT_PASSWORD shutdown
+	mariadb-secure-installation <<-EOF
+		
+		y
+		y
+		${SQL_ROOT_PASSWORD}
+		${SQL_ROOT_PASSWORD}
+		y
+		y
+		y
+		y
+	EOF
 
-exec mariadbd-safe
+	echo "[*] Creating database"
+	mysql -u root -p${SQL_ROOT_PASSWORD} -e \
+		"CREATE DATABASE ${SQL_DATABASE};"
+
+	echo "[*] Creating user"
+	mysql -u root -p${SQL_ROOT_PASSWORD} -e \
+		"CREATE USER '${SQL_USER}'@'%' IDENTIFIED BY '${SQL_PASSWORD}';"
+
+	echo "[*] Granting privileges"
+	mysql -u root -p${SQL_ROOT_PASSWORD} -e \
+		"GRANT ALL PRIVILEGES ON ${SQL_DATABASE}.* TO '${SQL_USER}'@'%';"
+
+	echo "[*] Flushing privileges"
+	mysql -u root -p${SQL_ROOT_PASSWORD} -e \
+		"FLUSH PRIVILEGES;"
+
+	echo "[*] Stopping temporary Database"
+	service mariadb stop;
+fi
+
+echo "[*] Launching MariaDB"
+exec "$@"
