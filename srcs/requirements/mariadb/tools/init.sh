@@ -2,11 +2,11 @@
 
 
 if [ -d "/var/lib/mysql/${SQL_DATABASE}" ]; then
-	echo "[*] Database already exists, skipping creation"
+	echo "==Database already exists, skipping creation=="
 else
-	echo "[*] Database does not exist, ensuring MariaDB is setup"
+	echo "==Database does not exist, ensuring MariaDB is setup=="
 
-	echo "[*] Loading database in temporary init mode"
+	echo "==Loading database in temporary init mode=="
 	service mariadb start;
 
 	mariadb-secure-installation <<-EOF
@@ -21,25 +21,25 @@ else
 		y
 	EOF
 
-	echo "[*] Creating database"
+	echo "==Creating database=="
 	mysql -u root -p${SQL_ROOT_PASSWORD} -e \
 		"CREATE DATABASE ${SQL_DATABASE};"
 
-	echo "[*] Creating user"
+	echo "==Creating user=="
 	mysql -u root -p${SQL_ROOT_PASSWORD} -e \
 		"CREATE USER '${SQL_USER}'@'%' IDENTIFIED BY '${SQL_PASSWORD}';"
 
-	echo "[*] Granting privileges"
+	echo "==Granting privileges=="
 	mysql -u root -p${SQL_ROOT_PASSWORD} -e \
 		"GRANT ALL PRIVILEGES ON ${SQL_DATABASE}.* TO '${SQL_USER}'@'%';"
 
-	echo "[*] Flushing privileges"
+	echo "==Flushing privileges=="
 	mysql -u root -p${SQL_ROOT_PASSWORD} -e \
 		"FLUSH PRIVILEGES;"
 
-	echo "[*] Stopping temporary Database"
+	echo "==Stopping temporary Database=="
 	service mariadb stop;
 fi
 
-echo "[*] Launching MariaDB"
+echo "==Launching MariaDB=="
 exec "$@"

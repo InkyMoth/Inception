@@ -24,6 +24,13 @@ RUN chmod +x wp-cli.phar && \
 	mv wp-cli.phar /usr/local/bin/wp
 # RUN echo "source /home/$USER/wp-completion.bash" >> ~/.bashrc
 
+# SETTING UP CONFIGS
+COPY conf/php.ini /etc/php/8.2/fpm/php.ini
+
+RUN mkdir -p /var/www/html
+RUN wp core download --path="/var/www/html" --allow-root
+
+
 COPY tools/init.sh /bin/init.sh
 RUN chmod +x /bin/init.sh
 
