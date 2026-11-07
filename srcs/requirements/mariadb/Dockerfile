@@ -15,4 +15,4 @@ COPY tools/init.sh /
 RUN chmod +x /init.sh
 
 ENTRYPOINT ["/init.sh"]
-CMD ["mariadb"]
+CMD ["mysqld"]
