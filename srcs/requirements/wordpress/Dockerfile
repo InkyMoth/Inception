@@ -11,19 +11,18 @@ RUN apt-get install -y php7.3 \
 
 
 # INSTALLING AND EXTRACTING WORDPRESS FR
-RUN mkdir -p /var/www/wordpress
+RUN mkdir -p /var/www/html
 RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
 RUN cd /var/www \
 	&& tar -xzf wordpress-6.0-fr_FR.tar.gz \
 	&& rm wordpress-6.0-fr_FR.tar.gz
-RUN chown -R root:root /var/www/wordpress
+RUN chown -R root:root /var/www/html
 
 # INSTALLING WP-CLI
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 RUN chmod +x wp-cli.phar && \
 	mv wp-cli.phar /usr/local/bin/wp
 # RUN echo "source /home/$USER/wp-completion.bash" >> ~/.bashrc
-
 
 COPY tools/init.sh /bin/init.sh
 RUN chmod +x /bin/init.sh
