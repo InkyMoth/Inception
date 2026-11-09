@@ -1,44 +1,26 @@
-NAME = PmergeMe
-SRCDIR = src/
-OBJDIR = obj/
+SRCDIR = srcs/
+ENVS = srcs/.env
 
-DFL_COLOR = \033[0m
-GREEN = 	\033[1;32m
-PURBLE = 	\033[1;35m
-MAROOON = 	\033[1;33m
-EVIL_RED = 	\033[1;31m
 
-FILES = PmergeMe main
-SRCS = $(addprefix $(SRCDIR), $(addsuffix .cpp, ${FILES}))
-OBJS = $(addprefix $(OBJDIR), $(addsuffix .o, ${FILES}))
-vpath %.cpp $(SRCDIR)
+all: build run
 
-INCLUDES = include
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -g
-CC = c++
+build:
+	mkdir -p /home/${USER}/data/mariadb /home/${USER}/data/wordpress
+	docker-compose -f $(SRCDIR)docker-compose.yml build
 
-all : ${NAME}
+run:
+	docker-compose -f $(SRCDIR)docker-compose.yml --env-file $(ENVS) up
+clean:
+	docker-compose -f $(SRCDIR)docker-compose.yml down
+fclean:
+	docker-compose -f $(SRCDIR)docker-compose.yml down -v
 
-${OBJDIR}%.o : %.cpp ${INCLUDES}/*.hpp
-	@mkdir -p ${OBJDIR}
-	@${CC} ${CFLAGS} -I${INCLUDES} -c $< -o $@
-	
+start:
+	docker-compose -f $(SRCDIR)docker-compose.yml start
+stop:
+	docker-compose -f $(SRCDIR)docker-compose.yml stop
 
-${NAME} : ${OBJS}
-	@echo "${MAROOON}Compiling file(s)...${DFL_COLOR}"
-	${CC} ${CFLAGS} ${OBJS} -o ${NAME}
-	@echo "${MAROOON}Done!${DFL_COLOR}"
-	@echo "${GREEN}${NAME} ready!${DFL_COLOR}"
+re: stop fclean all
 
-clean :
-	@rm -rf ${OBJDIR}
-	@echo "${PURBLE}obj(s) cleaned!${DFL_COLOR}"
 
-fclean : clean
-	@rm -f ${NAME} 
-	@echo "${PURBLE}${NAME} fully cleaned!${DFL_COLOR}"
-
-re : fclean all
-	@echo "${GREEN}${NAME} cleaned and remade!${DFL_COLOR}"
-
-.PHONY: re all clean fclean
+.PHONY: all build run clean fclean start stop re
