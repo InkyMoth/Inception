@@ -26,7 +26,9 @@ A bind mount is given a file or directory on the host machine to use to store da
 
 
 # Instructions
-##### this content will be available in the full release
+In order to use try this project yourself, run a virtual machine supporting Linux Debian and clone this repository. Open the repository in terminal an run the command `make run` to start the infrastructure.
 
 # Resources
+As well as the help of colleagues, some of which had done the project while others were actively working on it at the time, this project was mainly done with the help of [this guide](https://inception.cluzet.fr/) and the [official Docker documentation](https://docs.docker.com).
+
 No Generative AI or LLM was used in the learning process or the making of this project, as well as the creation of this README.
