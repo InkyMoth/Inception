@@ -21,9 +21,9 @@ else
 	echo "==installing core=="
 	wp core install --allow-root --path='/var/www/html' \
 	--url='gaasseli.42.fr' \
-	--title='Evil Lair' \
-	--admin_user='Admin' \
-	--admin_email='admin@email.com'
+	--title='The World (its hers)' \
+	--admin_user='Miku' \
+	--admin_email='hatsunemiku@email.com'
 
 	echo "==creating user=="
 	wp user create ${WP_USER} ${WP_EMAIL} --user_pass=${WP_PASS} \
