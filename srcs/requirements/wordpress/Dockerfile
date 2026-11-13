@@ -25,7 +25,7 @@ RUN chmod +x wp-cli.phar && \
 # RUN echo "source /home/$USER/wp-completion.bash" >> ~/.bashrc
 
 # SETTING UP CONFIGS
-COPY conf/php.ini /etc/php/8.2/fpm/php.ini
+COPY conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 
 RUN mkdir -p /var/www/html
 RUN wp core download --path="/var/www/html" --allow-root

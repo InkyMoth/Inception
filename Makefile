@@ -6,19 +6,19 @@ all: build run
 
 build:
 	mkdir -p /home/${USER}/data/mariadb /home/${USER}/data/wordpress
-	docker-compose -f $(SRCDIR)docker-compose.yml build
+	docker compose -f $(SRCDIR)docker-compose.yml build
 
 run:
-	docker-compose -f $(SRCDIR)docker-compose.yml --env-file $(ENVS) up
+	docker compose -f $(SRCDIR)docker-compose.yml --env-file $(ENVS) up
 clean:
-	docker-compose -f $(SRCDIR)docker-compose.yml down
+	docker compose -f $(SRCDIR)docker-compose.yml down
 fclean:
-	docker-compose -f $(SRCDIR)docker-compose.yml down -v
+	docker compose -f $(SRCDIR)docker-compose.yml down -v
 
 start:
-	docker-compose -f $(SRCDIR)docker-compose.yml start
+	docker compose -f $(SRCDIR)docker-compose.yml start
 stop:
-	docker-compose -f $(SRCDIR)docker-compose.yml stop
+	docker compose -f $(SRCDIR)docker-compose.yml stop
 
 re: stop fclean all
 
